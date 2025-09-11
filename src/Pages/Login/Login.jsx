@@ -1,21 +1,34 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import useTitle from '../../Hooks/useTitle';
+import { AuthContext } from '../../AppContext/Auth/AuthContext';
 
 export default function Login() {
+
+    useTitle("Login")
+
+    const [showPassword, setShowPassword] = useState(false);
+
+    const navigate=useNavigate()
+
+
+
     const [formData, setFormData] = useState({
         email: '',
         password: ''
     });
-    const [showPassword, setShowPassword] = useState(false);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
+
+
+
+
+
+
+
+
+
+
 
     return (
         <div

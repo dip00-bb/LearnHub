@@ -1,10 +1,24 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { Link } from 'react-router';
+import useTitle from '../../Hooks/useTitle';
+
+import { AuthContext } from '../../AppContext/Auth/AuthContext';
+import { validatePassword } from '../../Functions/passwordValidation';
 
 export default function Register() {
-    const [formData, setFormData] = useState();
+
+
+    useTitle("Register")
+
+    const [formData, setFormData] = useState()
+
     const [showPassword, setShowPassword] = useState(false);
+
+    const [passwordError, setPasswordError] = useState(null)
+
+
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -14,9 +28,14 @@ export default function Register() {
         }));
     };
 
-    const handleSubmit=(e)=>{
+    const handleSubmit = (e) => {
+        const validate = validatePassword(formData.password, setPasswordError)
         e.preventDefault()
-        console.log(formData)
+
+        if (validate) {
+            console.log(formData)
+        }
+
     }
 
     return (
@@ -155,6 +174,9 @@ export default function Register() {
                                     '--tw-ring-color': 'var(--primary-color)'
                                 }}
                             />
+
+
+
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
@@ -163,7 +185,11 @@ export default function Register() {
                             >
                                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                             </button>
+
+
                         </div>
+
+                        <p className='my-2 text-center text-red-500'>{passwordError && passwordError}</p>
                     </div>
 
                     {/* Sign Up Button */}
