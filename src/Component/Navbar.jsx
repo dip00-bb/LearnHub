@@ -1,4 +1,4 @@
-import { use, useContext } from "react";
+import { use, useContext, useState } from "react";
 import { motion } from "framer-motion";
 import { Menu, X, ArrowRight, Sun, Moon } from "lucide-react";
 import { Link } from "react-router";
@@ -6,7 +6,7 @@ import { ThemeContext } from "../AppContext/Theme/ThemeContext";
 import { AuthContext } from "../AppContext/Auth/AuthContext";
 
 export default function Navbar() {
-
+  const [isOpen, setIsOpen] = useState(false);
 
   const { theme, toggleTheme } = use(ThemeContext)
   const { user } = useContext(AuthContext)
@@ -16,13 +16,13 @@ export default function Navbar() {
       Log out
     </button>) :
     (<>
-      <button className="cursor-pointer">
+      <Link to='/login' className="cursor-pointer">
         Sign In
-      </button>
+      </Link>
 
-      <button className="cursor-pointer">
+      <Link to='/register' className="cursor-pointer">
         Sign Up
-      </button>
+      </Link>
     </>)
 
 
@@ -60,7 +60,7 @@ export default function Navbar() {
             {/* Theme Toggle Button */}
             <motion.button
               whileTap={{ rotate: 180, scale: 0.8 }}
-              onClick={() => toggleTheme}
+              onClick={toggleTheme}
               className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition cursor-pointer"
             >
               <motion.div
@@ -77,22 +77,24 @@ export default function Navbar() {
 
           {/* Mobile menu button */}
           <button
-            onClick={() => toggleTheme}
+            onClick={() => setIsOpen(!isOpen)}
             className="md:hidden p-2 rounded-md text-gray-700"
           >
-            {theme ? <X size={24} /> : <Menu size={24} />}
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      {theme && (
+      {isOpen && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="md:hidden bg-white px-6 py-4 space-y-4 shadow-lg"
         >
-          {conditionalAuthButton}
+          <div className="space-x-6">
+            {conditionalAuthButton}
+          </div>
 
           {/* Start Learning Button */}
           <motion.button
@@ -115,7 +117,7 @@ export default function Navbar() {
           {/* Theme Toggle Button */}
           <motion.button
             whileTap={{ rotate: 180, scale: 0.8 }}
-            onClick={() => toggleTheme}
+            onClick={toggleTheme}
             className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition w-full flex justify-center"
           >
             <motion.div
