@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { Link } from 'react-router';
 import useTitle from '../../Hooks/useTitle';
 
 import { AuthContext } from '../../AppContext/Auth/AuthContext';
 import { validatePassword } from '../../Functions/passwordValidation';
+import { axiosPublic } from '../../AxiosInstance/useAxiosPublic';
+import { axiosFileUpload } from '../../AxiosInstance/useFileUpload';
 
 export default function Register() {
 
@@ -17,7 +19,9 @@ export default function Register() {
 
     const [passwordError, setPasswordError] = useState(null)
 
+    const [imageUrl,setImageUrl]=useState("")
 
+    const { userRegister, updateUser, setUser } = use(AuthContext)
 
 
     const handleInputChange = (e) => {
@@ -28,15 +32,66 @@ export default function Register() {
         }));
     };
 
+
+
+    const handleUploadFile = async (e) => {
+        const file = e.target.files[0]
+        if (!file) return
+
+        const data = new FormData()
+        data.append("file", file)
+        data.append("upload_preset", "seller-product")
+        data.append("cloud_name", "dxnz82n6g")
+        const response = await axiosFileUpload.post('/dxnz82n6g/image/upload', data)
+        setImageUrl(response.data.url)
+    }
+
     const handleSubmit = (e) => {
         const validate = validatePassword(formData.password, setPasswordError)
         e.preventDefault()
 
         if (validate) {
-            console.log(formData)
+            userRegister(formData.userEmail, formData.userPassword)
+                .then((res) => {
+                    if (res.user) {
+
+                        const user = res.user
+                        updateUser(formData.userName, formData.userPhoto).then(() => {
+
+                            setUser({ ...user, displayName: formData.userName, photoURL: formData.userPhoto });
+
+                            const userInformation = {
+                                name: formData.userName,
+                                email: formData.userEmail,
+                                photoURL: formData.userPhoto,
+
+                            };
+
+                            axiosPublic.post('/addNewUser', userInformation)
+                                .then(() => {
+                                    console.log("JHJ")
+                                    // registerSuccessSwal(formData.userName)
+                                    // navigate('/')
+                                }).catch((err) => {
+                                    console.log(err)
+                                })
+
+                        }).catch(error => {
+                            console.log(error)
+                        })
+
+                    }
+
+
+                })
+                .catch((error) => {
+                    console.log(error)
+                });
         }
 
     }
+
+
 
     return (
         <div
@@ -190,6 +245,33 @@ export default function Register() {
                         </div>
 
                         <p className='my-2 text-center text-red-500'>{passwordError && passwordError}</p>
+                    </div>
+
+
+                    <div>
+                        <label
+                            className="block text-sm font-medium mb-2"
+                            style={{ color: 'var(--text-color)' }}
+                        >
+                            Upload Profile Image
+                        </label>
+                        <input
+                            type="file"
+                            name="profileImage"
+                            onChange={handleUploadFile}
+                            className="block w-full text-sm text-gray-500 
+               file:mr-4 file:py-2 file:px-4
+               file:rounded-full file:border-0
+               file:text-sm file:font-medium
+               file:bg-[var(--primary-color)] file:text-white
+               hover:file:opacity-90
+               cursor-pointer"
+                            style={{
+                                backgroundColor: 'var(--background-color)',
+                                color: 'var(--text-color)',
+                                borderColor: '#d1d5db'
+                            }}
+                        />
                     </div>
 
                     {/* Sign Up Button */}
