@@ -3,6 +3,8 @@ import { Eye, EyeOff } from 'lucide-react';
 import { Link,} from 'react-router';
 import useTitle from '../../Hooks/useTitle';
 import { AuthContext } from '../../AppContext/Auth/AuthContext';
+import { handleEmailPassLogIn } from '../../AuthenticationFunction/authfunction';
+import { errorAlert, successAlert } from '../../Utilitis/alertmsg';
 
 export default function Login() {
 
@@ -16,7 +18,7 @@ export default function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        userLogIn(formData.email,formData.password)
+        handleEmailPassLogIn(userLogIn,formData,successAlert,errorAlert)
     }
 
     const handleInputChange = (e) => {

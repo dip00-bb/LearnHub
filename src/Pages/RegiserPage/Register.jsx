@@ -4,12 +4,17 @@ import { Link } from 'react-router';
 import useTitle from '../../Hooks/useTitle';
 
 import { AuthContext } from '../../AppContext/Auth/AuthContext';
-import { validatePassword } from '../../Functions/passwordValidation';
+import { validatePassword } from '../../AuthenticationFunction/passwordValidation';
 import { axiosPublic } from '../../AxiosInstance/useAxiosPublic';
 import { axiosFileUpload } from '../../AxiosInstance/useFileUpload';
+import { errorAlert, successAlert } from '../../Utilitis/alertmsg';
+import { handleEmailPassReg } from '../../AuthenticationFunction/authfunction';
+
+
+
+
 
 export default function Register() {
-
 
     useTitle("Register")
 
@@ -35,7 +40,6 @@ export default function Register() {
     };
 
 
-
     const handleFileChange = (e) => {
         const file = e.target.files[0]
         if (!file) return
@@ -44,7 +48,6 @@ export default function Register() {
         }
 
     }
-
 
     const handleFileUpload = async () => {
         const file = profileImage
@@ -61,53 +64,17 @@ export default function Register() {
     }
 
     const handleSubmit = (e) => {
-        console.log(formData)
-        const validate = validatePassword(formData.password, setPasswordError)
         e.preventDefault()
+        const validate = validatePassword(formData.password, setPasswordError)
+
 
         if (validate) {
             handleFileUpload()
-
-            registerUser(formData.email, formData.password)
-                .then((res) => {
-                    if (res.user) {
-
-                        const user = res.user
-                        updateUser(formData.userName, imageUrl).then(() => {
-
-                            setUser({ ...user, displayName: formData.userName, photoURL: imageUrl });
-
-                            const userInformation = {
-                                fName: formData.firstName,
-                                lName: formData.lastName,
-                                email: formData.email,
-                                photoURL: imageUrl,
-                            };
-
-                            axiosPublic.post('/user', userInformation)
-                                .then(() => {
-                                    console.log("JHJ")
-                                    // registerSuccessSwal(formData.userName)
-                                    // navigate('/')
-                                }).catch((err) => {
-                                    console.log(err)
-                                })
-
-                        }).catch(error => {
-                            console.log(error)
-                            console.log(error.message)
-                        })
-
-                    }
-
-
-                })
-                .catch((error) => {
-                    console.log(error)
-                });
+            handleEmailPassReg(registerUser, updateUser, setUser,formData,imageUrl,axiosPublic,successAlert,errorAlert)
         }
 
     }
+
 
 
 
