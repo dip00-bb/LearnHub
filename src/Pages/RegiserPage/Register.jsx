@@ -8,7 +8,7 @@ import { validatePassword } from '../../AuthenticationFunction/passwordValidatio
 import { axiosPublic } from '../../AxiosInstance/useAxiosPublic';
 import { axiosFileUpload } from '../../AxiosInstance/useFileUpload';
 import { errorAlert, successAlert } from '../../Utilitis/alertmsg';
-import { handleEmailPassReg } from '../../AuthenticationFunction/authfunction';
+import { handleEmailPassReg, googleLoginFn } from '../../AuthenticationFunction/authfunction';
 
 
 
@@ -28,7 +28,7 @@ export default function Register() {
 
     const [imageUrl, setImageUrl] = useState("")
 
-    const { registerUser, updateUser, setUser } = use(AuthContext)
+    const { registerUser, updateUser, setUser,googleLogin } = use(AuthContext)
 
 
     const handleInputChange = (e) => {
@@ -70,12 +70,14 @@ export default function Register() {
 
         if (validate) {
             handleFileUpload()
-            handleEmailPassReg(registerUser, updateUser, setUser,formData,imageUrl,axiosPublic,successAlert,errorAlert)
+            handleEmailPassReg(registerUser, updateUser, setUser, formData, imageUrl, axiosPublic, successAlert, errorAlert)
         }
 
     }
 
-
+    const handleGoogleLogin = () => {
+        googleLoginFn(googleLogin,axiosPublic,successAlert,errorAlert)
+    }
 
 
     return (
@@ -88,7 +90,7 @@ export default function Register() {
         >
             <div className="w-full max-w-md mx-auto">
                 {/* Logo */}
-                <div className="flex justify-center items-center mb-12">
+                <div className="flex justify-center items-center mb-5">
                     <div
                         className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg"
                         style={{ backgroundColor: 'var(--primary-color)' }}
@@ -109,16 +111,8 @@ export default function Register() {
                         className="text-3xl font-normal mb-2"
                         style={{ color: 'var(--text-color)' }}
                     >
-                        Hi! Welcome to
+                        Hi! Welcome to Learn Hub
                     </h1>
-                    <div className="flex items-center justify-center">
-                        <span
-                            className="text-3xl font-normal"
-                            style={{ color: 'var(--text-color)' }}
-                        >
-                            Wealth Wave dude
-                        </span>
-                    </div>
                 </div>
 
                 {/* Form */}
@@ -308,9 +302,10 @@ export default function Register() {
                     </div>
 
                     {/* Social Login Buttons */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <div className="flex justify-center">
                         <button
                             type="button"
+                            onClick={handleGoogleLogin}
                             className="cursor-pointer flex items-center justify-center px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors touch-manipulation text-xs sm:text-sm"
                             style={{
                                 backgroundColor: 'var(--background-color)',
@@ -325,20 +320,6 @@ export default function Register() {
                                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                             </svg>
                             <span className="truncate">Sign up with Google</span>
-                        </button>
-                        <button
-                            type="button"
-                            className=" cursor-pointer flex items-center justify-center px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors touch-manipulation text-xs sm:text-sm"
-                            style={{
-                                backgroundColor: 'var(--background-color)',
-                                color: 'var(--text-color)',
-                                borderColor: '#d1d5db'
-                            }}
-                        >
-                            <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
-                            </svg>
-                            <span className="truncate">Sign up with Apple</span>
                         </button>
                     </div>
                 </form>

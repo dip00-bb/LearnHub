@@ -2,7 +2,7 @@
 
 
 // register function
-export const handleEmailPassReg = (register,update,setuser,dataObj,imgurl,apiPublic,successAlert,errorAlert) => {
+export const handleEmailPassReg = (register, update, setuser, dataObj, imgurl, apiPublic, successAlert, errorAlert) => {
 
     register(dataObj.email, dataObj.password)
         .then((res) => {
@@ -28,7 +28,7 @@ export const handleEmailPassReg = (register,update,setuser,dataObj,imgurl,apiPub
                         })
 
                 }).catch(error => {
-                   errorAlert(error.message)
+                    errorAlert(error.message)
 
                 })
             }
@@ -37,13 +37,43 @@ export const handleEmailPassReg = (register,update,setuser,dataObj,imgurl,apiPub
         .catch((error) => {
             errorAlert(error.message)
         });
-} 
+}
 
-
-export const handleEmailPassLogIn=(loginFn,dataObj,successAlert,errorAlert)=>{
-    loginFn(dataObj.email,dataObj.password).then(()=>{
+// login function
+export const handleEmailPassLogIn = (loginFn, dataObj, successAlert, errorAlert) => {
+    loginFn(dataObj.email, dataObj.password).then(() => {
         successAlert("Welcome back")
-    }).catch(err=>{
+    }).catch(err => {
         errorAlert(err.message)
     })
+}
+
+
+export const googleLoginFn = (loginFn, apiPublic, successAlert, errorAlert) => {
+    loginFn()
+        .then((res) => {
+            const user = res.user
+            console.log(user)
+            const userInformation = {
+                fName: user.displayName.split(" ")[0],
+                lName: user.displayName.split(" ")[1],
+                email: user.email,
+                photoURL: user.photoURL,
+            };
+
+            successAlert("User registered successfully")
+
+
+            apiPublic.post('/user', userInformation)
+                .then(() => {
+                    return
+
+                }).catch((err) => {
+                    errorAlert(err.message)
+                })
+
+
+        }).catch(errors => {
+            errorAlert(errors.message)
+        })
 }
