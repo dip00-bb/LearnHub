@@ -1,6 +1,6 @@
 import React, { use, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { Link, useNavigate } from 'react-router';
+import { Link,} from 'react-router';
 import useTitle from '../../Hooks/useTitle';
 import { AuthContext } from '../../AppContext/Auth/AuthContext';
 
@@ -8,24 +8,24 @@ export default function Login() {
 
     useTitle("Login")
 
+    const {userLogIn}=use(AuthContext)
+
     const [showPassword, setShowPassword] = useState(false);
 
-    const navigate=useNavigate()
+    const [formData, setFormData] = useState();
 
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        userLogIn(formData.email,formData.password)
+    }
 
-
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    });
-
-
-
-
-
-
-
-
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
 
 
 
@@ -40,7 +40,7 @@ export default function Login() {
         >
             <div className="items-center w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
                 {/* Logo */}
-                <div className="flex justify-center mb-6 sm:mb-8 md:mb-10 lg:mb-12">
+                <div className="flex justify-center items-center mb-6 sm:mb-8 md:mb-10 lg:mb-12">
                     <div
                         className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base md:text-lg lg:text-xl"
                         style={{ backgroundColor: 'var(--primary-color)' }}
@@ -63,19 +63,10 @@ export default function Login() {
                     >
                         Welcome back!
                     </h1>
-                    <div className="flex items-center justify-center flex-wrap">
-                        <span
-                            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-normal"
-                            style={{ color: 'var(--text-color)' }}
-                        >
-                            Please sign in
-                        </span>
-                        <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl ml-2">🔐</span>
-                    </div>
                 </div>
 
                 {/* Form */}
-                <div className="space-y-4 sm:space-y-5 md:space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 md:space-y-6">
                     {/* Email */}
                     <div>
                         <label
@@ -87,7 +78,6 @@ export default function Login() {
                         <input
                             type="email"
                             name="email"
-                            value={formData.email}
                             onChange={handleInputChange}
                             placeholder="Enter your email"
                             className="w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:outline-none focus:ring-2 transition-all"
@@ -112,7 +102,6 @@ export default function Login() {
                             <input
                                 type={showPassword ? "text" : "password"}
                                 name="password"
-                                value={formData.password}
                                 onChange={handleInputChange}
                                 placeholder="Enter your password"
                                 className="w-full px-3 py-2 sm:px-4 sm:py-3 pr-10 sm:pr-12 text-sm sm:text-base rounded-lg border border-gray-300 focus:outline-none focus:ring-2 transition-all"
@@ -146,7 +135,7 @@ export default function Login() {
 
                     {/* Sign In Button */}
                     <button
-                        type="button"
+                        type="submit"
                         className="cursor-pointer w-full py-3 sm:py-4 rounded-full text-white font-medium text-base sm:text-lg hover:opacity-90 transition-opacity touch-manipulation"
                         style={{ backgroundColor: 'var(--primary-color)' }}
                     >
@@ -228,7 +217,7 @@ export default function Login() {
                             <span className="truncate">Sign in with Apple</span>
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
 
 

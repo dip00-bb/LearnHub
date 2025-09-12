@@ -9,10 +9,19 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const { theme, toggleTheme } = use(ThemeContext)
-  const { user } = useContext(AuthContext)
+  const { user, signout } = useContext(AuthContext)
+
+
+  const handleLogOut = () => {
+    signout()
+  }
+
+ 
+
+
 
   const conditionalAuthButton = user ? (
-    <button className="cursor-pointer">
+    <button className="cursor-pointer" onClick={handleLogOut}>
       Log out
     </button>) :
     (<>

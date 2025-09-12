@@ -19,9 +19,11 @@ export default function Register() {
 
     const [passwordError, setPasswordError] = useState(null)
 
-    const [imageUrl,setImageUrl]=useState("")
+    const [profileImage, setProfileImage] = useState("")
 
-    const { userRegister, updateUser, setUser } = use(AuthContext)
+    const [imageUrl, setImageUrl] = useState("")
+
+    const { registerUser, updateUser, setUser } = use(AuthContext)
 
 
     const handleInputChange = (e) => {
@@ -34,40 +36,55 @@ export default function Register() {
 
 
 
-    const handleUploadFile = async (e) => {
+    const handleFileChange = (e) => {
         const file = e.target.files[0]
         if (!file) return
+        else {
+            setProfileImage(file)
+        }
 
-        const data = new FormData()
-        data.append("file", file)
-        data.append("upload_preset", "seller-product")
-        data.append("cloud_name", "dxnz82n6g")
-        const response = await axiosFileUpload.post('/dxnz82n6g/image/upload', data)
-        setImageUrl(response.data.url)
+    }
+
+
+    const handleFileUpload = async () => {
+        const file = profileImage
+        if (!file) return
+        else {
+            const data = new FormData()
+            data.append("file", file)
+            data.append("upload_preset", "seller-product")
+            data.append("cloud_name", "dxnz82n6g")
+            const response = await axiosFileUpload.post('/dxnz82n6g/image/upload', data)
+            setImageUrl(response.data.url)
+        }
+
     }
 
     const handleSubmit = (e) => {
+        console.log(formData)
         const validate = validatePassword(formData.password, setPasswordError)
         e.preventDefault()
 
         if (validate) {
-            userRegister(formData.userEmail, formData.userPassword)
+            handleFileUpload()
+
+            registerUser(formData.email, formData.password)
                 .then((res) => {
                     if (res.user) {
 
                         const user = res.user
-                        updateUser(formData.userName, formData.userPhoto).then(() => {
+                        updateUser(formData.userName, imageUrl).then(() => {
 
-                            setUser({ ...user, displayName: formData.userName, photoURL: formData.userPhoto });
+                            setUser({ ...user, displayName: formData.userName, photoURL: imageUrl });
 
                             const userInformation = {
-                                name: formData.userName,
-                                email: formData.userEmail,
-                                photoURL: formData.userPhoto,
-
+                                fName: formData.firstName,
+                                lName: formData.lastName,
+                                email: formData.email,
+                                photoURL: imageUrl,
                             };
 
-                            axiosPublic.post('/addNewUser', userInformation)
+                            axiosPublic.post('/user', userInformation)
                                 .then(() => {
                                     console.log("JHJ")
                                     // registerSuccessSwal(formData.userName)
@@ -78,6 +95,7 @@ export default function Register() {
 
                         }).catch(error => {
                             console.log(error)
+                            console.log(error.message)
                         })
 
                     }
@@ -258,7 +276,7 @@ export default function Register() {
                         <input
                             type="file"
                             name="profileImage"
-                            onChange={handleUploadFile}
+                            onChange={handleFileChange}
                             className="block w-full text-sm text-gray-500 
                file:mr-4 file:py-2 file:px-4
                file:rounded-full file:border-0
