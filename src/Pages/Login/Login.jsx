@@ -1,24 +1,27 @@
 import React, { use, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { Link,} from 'react-router';
+import { Link, } from 'react-router';
 import useTitle from '../../Hooks/useTitle';
 import { AuthContext } from '../../AppContext/Auth/AuthContext';
-import { handleEmailPassLogIn } from '../../AuthenticationFunction/authfunction';
+import { googleLoginFn, handleEmailPassLogIn } from '../../AuthenticationFunction/authfunction';
 import { errorAlert, successAlert } from '../../Utilitis/alertmsg';
+import { axiosPublic } from '../../AxiosInstance/useAxiosPublic';
 
 export default function Login() {
 
     useTitle("Login")
 
-    const {userLogIn}=use(AuthContext)
+    const { userLogIn } = use(AuthContext)
 
     const [showPassword, setShowPassword] = useState(false);
 
     const [formData, setFormData] = useState();
 
+    const { googleLogin } = use(AuthContext)
+
     const handleSubmit = (e) => {
         e.preventDefault()
-        handleEmailPassLogIn(userLogIn,formData,successAlert,errorAlert)
+        handleEmailPassLogIn(userLogIn, formData, successAlert, errorAlert)
     }
 
     const handleInputChange = (e) => {
@@ -29,6 +32,9 @@ export default function Login() {
         }));
     };
 
+    const handleGoogleLogin = () => {
+        googleLoginFn(googleLogin, axiosPublic, successAlert, errorAlert)
+    }
 
 
 
@@ -188,6 +194,7 @@ export default function Login() {
                     {/* Social Login Buttons */}
                     <div className="flex justify-center">
                         <button
+                            onClick={handleGoogleLogin}
                             type="button"
                             className=" cursor-pointer flex items-center justify-center px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors touch-manipulation text-xs sm:text-sm"
                             style={{
