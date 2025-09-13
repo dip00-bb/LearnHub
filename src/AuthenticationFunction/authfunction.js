@@ -53,12 +53,12 @@ export const googleLoginFn = (loginFn, apiPublic, successAlert, errorAlert) => {
     loginFn()
         .then((res) => {
             const user = res.user
-            console.log(user)
             const userInformation = {
                 fName: user.displayName.split(" ")[0],
                 lName: user.displayName.split(" ")[1],
                 email: user.email,
                 photoURL: user.photoURL,
+                UID:user.uid
             };
 
             successAlert("User registered successfully")
@@ -68,8 +68,9 @@ export const googleLoginFn = (loginFn, apiPublic, successAlert, errorAlert) => {
                 .then(() => {
                     return
 
+                // eslint-disable-next-line no-unused-vars
                 }).catch((err) => {
-                    errorAlert(err.message)
+                    return
                 })
 
 

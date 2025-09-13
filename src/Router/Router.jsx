@@ -3,6 +3,7 @@ import App from "../App";
 import Register from "../Pages/RegiserPage/Register";
 import Login from "../Pages/Login/Login";
 import StartLearning from "../Pages/StartLearning/StartLearning";
+import PrivateRoute from "../CustomRoute/PrivateRoute";
 
 export const router = createBrowserRouter([
 
@@ -21,7 +22,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/posts',
-                Component: StartLearning
+                element: <PrivateRoute><StartLearning></StartLearning></PrivateRoute>
             }
 
         ]

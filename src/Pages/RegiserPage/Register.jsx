@@ -28,7 +28,7 @@ export default function Register() {
 
     const [imageUrl, setImageUrl] = useState("")
 
-    const { registerUser, updateUser, setUser,googleLogin } = use(AuthContext)
+    const { registerUser, updateUser, setUser, googleLogin } = use(AuthContext)
 
 
     const handleInputChange = (e) => {
@@ -76,7 +76,7 @@ export default function Register() {
     }
 
     const handleGoogleLogin = () => {
-        googleLoginFn(googleLogin,axiosPublic,successAlert,errorAlert)
+        googleLoginFn(googleLogin, axiosPublic, successAlert, errorAlert)
     }
 
 
