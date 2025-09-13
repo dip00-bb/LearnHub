@@ -1,4 +1,5 @@
 import { use, useContext, useState } from "react";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { Menu, X, ArrowRight, Sun, Moon } from "lucide-react";
 import { Link } from "react-router";
@@ -16,7 +17,7 @@ export default function Navbar() {
     signout()
   }
 
- 
+
 
 
 
@@ -35,8 +36,27 @@ export default function Navbar() {
     </>)
 
 
+  const startLearningButton = <Link to='/posts'>
+    <motion.button
+      whileHover="hover"
+      className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded-2xl font-medium hover:bg-gray-800 transition w-full justify-center"
+    >
+      Start Learning
+      <motion.span
+        variants={{
+          hover: { x: 6 },
+          initial: { x: 0 },
+        }}
+        initial="initial"
+        transition={{ type: "spring", stiffness: 300 }}
+      >
+        <ArrowRight size={18} />
+      </motion.span>
+    </motion.button>
+  </Link>
+
   return (
-    <nav className="fixed top-0 left-0 w-full bg-white shadow-sm z-50">
+    <nav className="sticky top-0 left-0 w-full bg-white shadow-sm z-50">
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -49,23 +69,7 @@ export default function Navbar() {
             {conditionalAuthButton}
 
             {/* Start Learning Button */}
-            <motion.button
-              whileHover="hover"
-              className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded-2xl font-medium hover:bg-gray-800 transition cursor-pointer"
-            >
-              Start Learning
-              <motion.span
-                variants={{
-                  hover: { x: 6 },
-                  initial: { x: 0 },
-                }}
-                initial="initial"
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <ArrowRight size={18} />
-              </motion.span>
-            </motion.button>
-
+            {startLearningButton}
             {/* Theme Toggle Button */}
             <motion.button
               whileTap={{ rotate: 180, scale: 0.8 }}
@@ -106,23 +110,8 @@ export default function Navbar() {
           </div>
 
           {/* Start Learning Button */}
-          <motion.button
-            whileHover="hover"
-            className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded-2xl font-medium hover:bg-gray-800 transition w-full justify-center"
-          >
-            Start Learning
-            <motion.span
-              variants={{
-                hover: { x: 6 },
-                initial: { x: 0 },
-              }}
-              initial="initial"
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <ArrowRight size={18} />
-            </motion.span>
-          </motion.button>
 
+          {startLearningButton}
           {/* Theme Toggle Button */}
           <motion.button
             whileTap={{ rotate: 180, scale: 0.8 }}
